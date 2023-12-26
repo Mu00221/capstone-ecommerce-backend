@@ -1,0 +1,39 @@
+package com.shop.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.shop.model.Orders;
+import com.shop.repository.OrdersRepo;
+import com.shop.service.OrdersService;
+
+@RestController
+@CrossOrigin("*")
+@RequestMapping("/orders")
+public class OrdersController {
+    
+        @Autowired
+        private OrdersService ordersService;
+
+        @Autowired
+        private OrdersRepo ordersRepo;
+
+        @PostMapping("/productO/{productId}/userO/{userId}")
+        public Orders purchasProduct (@PathVariable Long productId, @PathVariable Long userId) {
+            return  ordersService.purchasProduct( productId, userId);
+        }
+
+        @GetMapping("/myTransactions/{userId}")
+        public List<Object[]> userTransactions (@PathVariable Long userId) {
+            return ordersRepo.findProductAndUserInfo(userId);
+        } 
+}
+
+
