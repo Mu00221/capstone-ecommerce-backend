@@ -25,7 +25,7 @@ public class OrdersService {
     @Autowired
     private ProductRepo productRepo;
 
-
+    // the process to purchase a product
     public Orders purchasProduct(Long productId, Long userId) {
         User user = userRepo.findById(userId).get();
         Product product = productRepo.findById(productId).get();

@@ -21,7 +21,7 @@ import com.shop.model.Product;
 import com.shop.repository.ProductRepo;
 import com.shop.service.ProductService;
 
-@RestController
+@RestController 
 @CrossOrigin("*")
 @RequestMapping("/product")
 public class ProductController {
@@ -33,7 +33,7 @@ public class ProductController {
     private ProductRepo productRepo;
 
 
-
+    // fetching only hoodies from Product table, I will try use enums on my next projects
     @GetMapping("/hoodie")
     public List<Product> getHoodies() {
         
@@ -102,45 +102,34 @@ public class ProductController {
         List<Product> outer = productRepo.listOuterwear();
         return outer;
     }
-
-
-    // @PostMapping("/productO/{productId}/userO/{userId}")
-    // public Product purchasProduct (@PathVariable Long productId, @PathVariable Long userId) {
-    //   return  productService.purchasProduct( productId, userId);
-    // }
-
      
-
-     @PostMapping("/productO/{productId}/cartO/{cartId}")
-    public Product cartProduct (@PathVariable Long productId, @PathVariable Long cartId) {
+    // the process to add product to a customer cart
+    @PostMapping("/productO/{productId}/cartO/{cartId}")
+    public Product setUserCartIdToProductTable (@PathVariable Long productId, @PathVariable Long cartId) {
       return  productService.cartProduct( productId, cartId);
     }
 
+    // it show a user the list of product he/she bought 
+    @GetMapping("/productOfUser/{userId}")
+    public List<Product> getUserProducts (@PathVariable Long userId) throws Exception {
 
-    // @GetMapping("/userPro/{userId}")
-    // public List<Product> loadUserProducts(@PathVariable Long userId) {
-    //     List<Product> products = productService.loadUserProducts(userId);
-    //     return products;
-    // }
-
-    // @GetMapping("/productOfUser/{userId}")
-    // public List<Product> getUserProducts (@PathVariable Long userId) throws Exception {
-
-    //     List<Product> products = productService.getUserProducts(userId);
-    //     return products;
-    // }
-
+        List<Product> products = productService.getUserProducts(userId);
+        return products;
+    }
+    // fetching product that the user add to the cart
     @GetMapping("productOfCart/{cartId}")
     public List<Product> getCartProducts (@PathVariable Long cartId) throws Exception {
         return productService.getCartProducts(cartId);
     }
 
+    // adding product to the table to be purchase
     @PostMapping("/add")
     public Product insertProduct(@RequestBody Product product) {
         Product addProduct = productService.insertProduct(product);
         return addProduct;
     }
 
+    // list of unsold products for the client
     @GetMapping("/get")
     public List<Product> unSoldProducts() {
 
@@ -148,7 +137,7 @@ public class ProductController {
         return getProducts;
     }
 
-    @GetMapping("/getByName")
+    @GetMapping("/getByGender")
     public ResponseEntity<Object> getByGender(@RequestParam("gender") String gender) {
         try {
             List<Product> foundProducts = productService.getByGender(gender);
@@ -230,11 +219,11 @@ public class ProductController {
 
 
      @PostMapping("/remove/{productId}")
-    public ResponseEntity<Object> removeCartProduct( @PathVariable Long productId) {
+    public ResponseEntity<Object> removeProductFromCart( @PathVariable Long productId) {
 
         try {
 
-            Product updateProcess = productService.removeProduct(productId);
+            Product updateProcess = productService.removeProductFromCart(productId);
             return new ResponseEntity<>(updateProcess, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e);
@@ -246,8 +235,18 @@ public class ProductController {
     }
 
    
-    
+    @PostMapping("/coupons")
+    public Product addCouponCodes (@RequestBody Product product) {
+        Product prod = productRepo.findById(product.getProductId()).get();
+        prod.getCouponList().add(product.getCoupons());
+
+        return productRepo.save(prod);
+
+    }
 
    
 
 }
+
+
+

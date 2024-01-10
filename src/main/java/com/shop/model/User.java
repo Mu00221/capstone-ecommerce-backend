@@ -67,10 +67,12 @@ public class User {
 
     private String photo;
 
+    // each user on cart.
    @JsonIgnore
    @OneToOne(mappedBy = "user")
    private Cart cart;
 
+   // the user will be able to buy multiple products.
    @JsonIgnore
    @OneToMany(mappedBy = "users")
    private List<Orders> user = new ArrayList<>();

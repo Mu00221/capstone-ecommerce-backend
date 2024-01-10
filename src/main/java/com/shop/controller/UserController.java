@@ -42,6 +42,8 @@ public class UserController {
   public ResponseEntity<Object> signUp(@RequestBody User user) {
         try {
             User savedUser = userService.signUp(user);
+
+            // every new user that signs up a cart will be created for him/her by defualt
             cartService.setUserId(savedUser.getUserId());
             return new ResponseEntity<Object>(savedUser, HttpStatus.CREATED);
         } catch (DataIntegrityViolationException e) {
@@ -60,6 +62,8 @@ public class UserController {
     public ResponseEntity<Object> signIn(@RequestBody User user) {
         try {
             User loggedInUser = userService.signIn(user);
+
+            // the method allow us to define the user status (Admin, Agent or Customer)
             userService.userStatus(loggedInUser.getUserId());
             return new ResponseEntity<Object>(loggedInUser, HttpStatus.OK);
         } catch (Exception e) {

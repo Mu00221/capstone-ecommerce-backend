@@ -69,17 +69,21 @@ public class Product {
 
     private String details;
 
+    private String coupons;
+
+    private ArrayList<String> couponList = new ArrayList<>();
 
     private String returnPolicy;
 
 
 
 
-    
+    // I defined one to one so each user can have only one cart.
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_id", referencedColumnName = "cartId")
     private Cart myCart;
 
+    // I defined the order entity here so I can use the object of it in my methods later.
     @JsonIgnore
    @OneToMany(mappedBy = "products")
    private List<Orders> product = new ArrayList<>();

@@ -19,6 +19,7 @@ public class CartService {
     @Autowired
     private UserRepo userRepo;
 
+    // craating cart for each user that signs up
     public Cart setUserId( Long userId) throws Exception {
 
       User user = userRepo.findById(userId).get();

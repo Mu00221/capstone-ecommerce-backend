@@ -23,13 +23,16 @@ public class Orders {
     private LocalDate orderDate;
 
     private String comments;
-
+    // the localDate help us track the real date.
     private LocalDate shipedDate;
 
+    // in this case one user will be able to set many order.
+    //Join column reference the foriegn key in the order table.
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "userId")
     private User users;
 
+    // the same product can be sold many times but the amout going to decrease each time it is being purchased.
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id", referencedColumnName = "productId")
     private Product products;

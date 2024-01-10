@@ -29,8 +29,8 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
 
 
 
-    //  @Query(value = "SELECT * FROM shop.product WHERE user_id = ?1", nativeQuery = true )
-    // List<Product> listUserProduct (Long orderId);
+     @Query(value = "SELECT * FROM shop.product WHERE user_id = ?1", nativeQuery = true )
+    List<Product> listUserProduct (Long orderId);
 
     @Query(value = "SELECT * FROM shop.product WHERE cart_id = ?1", nativeQuery = true)
     List<Product> listCartProducts (Long cartId);

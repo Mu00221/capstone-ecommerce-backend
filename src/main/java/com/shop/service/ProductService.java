@@ -1,5 +1,6 @@
 package com.shop.service;
 
+import java.rmi.AccessException;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,8 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 
 import com.shop.model.Cart;import com.shop.model.Product;
+import com.shop.model.User;
 import com.shop.repository.CartRepo;
 import com.shop.repository.ProductRepo;
+import com.shop.repository.UserRepo;
 
 
 @Service
@@ -21,41 +24,7 @@ public class ProductService {
     @Autowired
     private CartRepo cartRepo;
 
-
-    //  public Product purchasProduct(Long productId, Long userId) {
-
-    //     User user = userRepo.findById(userId).get();
-    //     Product product = productRepo.findById(productId).get();
-        
-
-    //      if(user != null) {
-           
-    //         product.setUserPro(user);
-            
-    //         int userPoints = user.getPoints();
-
-    //         if(userPoints == 60) {
-    //             product.setPrice(product.getPrice() * 0.8);
-    //         }
-
-    //         user.setPoints(user.getPoints() + 20);
-
-    //      } 
-    //       if( product.getUserPro() != null) {
-
-    //         product.setQuantity(product.getQuantity() - 1);
-    //         product.setSoldQty(product.getSoldQty() + 1);
-
-    //         if(product.getQuantity() == 0) {
-    //             product.setSold(true);
-    //         }
-
-    //      }
-
-    //      productRepo.save(product);
-
-    //     return product;
-    // }
+    private UserRepo userRepo;
 
     
 
@@ -72,26 +41,21 @@ public class ProductService {
          }
 
         return product;
-    }
+       }
 
     
 
- 
-
-       
-    // }
-
-    //  public List<Product> getUserProducts(Long userId) throws Exception {
+     public List<Product> getUserProducts(Long userId) throws Exception {
         
-    //   Optional<User> user = userRepo.findById(userId);
+      Optional<User> user = userRepo.findById(userId);
 
-    //     if(user.isPresent()) {
-    //         return productRepo.listUserProduct(userId);
-    //     }else {
-    //         throw new AccessException("No product was found!");
-    //     }
+        if(user.isPresent()) {
+            return productRepo.listUserProduct(userId);
+        }else {
+            throw new AccessException("the product was not found!");
+        }
         
-    // }
+    }
 
     
 
@@ -140,6 +104,7 @@ public class ProductService {
         }
     }
 
+    // setting the cart id to null before deleting
     public void deleteProperty(Long productId) {
         Optional<Product> product = productRepo.findById(productId);
 
@@ -154,7 +119,7 @@ public class ProductService {
         
         Optional<Cart> cart = cartRepo.findById(cartId);
         if(cart.isPresent()) {
-    
+            
             return productRepo.listCartProducts(cartId);
         }else{
             throw new ResourceAccessException("the cart Id is not existed!");
@@ -162,7 +127,7 @@ public class ProductService {
         
     }
 
-    public Product removeProduct( Long productId) {
+    public Product removeProductFromCart( Long productId) {
          Optional<Product> cartProduct = productRepo.findById(productId);
 
          if (cartProduct.isPresent()) {

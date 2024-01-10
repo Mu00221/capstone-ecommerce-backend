@@ -25,11 +25,14 @@ public class OrdersController {
         @Autowired
         private OrdersRepo ordersRepo;
 
+        // the method allow users to purchase and set the product id(sold) and user id(bought) to order table
         @PostMapping("/productO/{productId}/userO/{userId}")
         public Orders purchasProduct (@PathVariable Long productId, @PathVariable Long userId) {
             return  ordersService.purchasProduct( productId, userId);
         }
 
+        // the method provide the list of all the transactions including user info and product info 
+        // I used a cool query into order repository to get this result
         @GetMapping("/myTransactions/{userId}")
         public List<Object[]> userTransactions (@PathVariable Long userId) {
             return ordersRepo.findProductAndUserInfo(userId);
